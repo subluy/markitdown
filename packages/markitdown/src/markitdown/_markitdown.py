@@ -42,6 +42,13 @@ from .converters import (
     CsvConverter,
 )
 
+_tesseract_available = False
+try:
+    from .converters._tesseract_converter import TesseractConverter
+    _tesseract_available = True
+except ImportError:
+    pass
+
 from ._base_converter import DocumentConverter, DocumentConverterResult
 
 from ._exceptions import (
@@ -198,6 +205,8 @@ class MarkItDown:
             self.register_converter(PptxConverter())
             self.register_converter(AudioConverter())
             self.register_converter(ImageConverter())
+            if _tesseract_available:
+                self.register_converter(TesseractConverter(), priority=-1.0)
             self.register_converter(IpynbConverter())
             self.register_converter(PdfConverter())
             self.register_converter(OutlookMsgConverter())
